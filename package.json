@@ -47,14 +47,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/binary-com/binary-live-api.git"
+    "url": "git+https://github.com/thiagorepo/broker-live-api.git"
   },
   "author": "Boris @ Binary.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/binary-com/binary-live-api/issues"
+    "url": "https://github.com/thiagorepo/broker-live-api/issues"
   },
-  "homepage": "https://github.com/binary-com/binary-live-api#readme",
+  "homepage": "https://github.com/thiagorepo/broker-live-api#readme",
   "babel": {
     "babelrc": false,
     "presets": [
