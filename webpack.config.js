@@ -18,6 +18,33 @@ module.exports = {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 include: path.join(__dirname, 'src'),
+                options: {
+                    babelrc: false,
+                    presets: [
+                        [
+                            'env',
+                            {
+                                targets: {
+                                    browsers: [
+                                        'last 2 versions',
+                                        'ios_saf >= 8',
+                                        'not IE <= 10',
+                                        'chrome >= 49',
+                                        'firefox >= 49',
+                                        '> 1%',
+                                    ],
+                                },
+                                loose: true,
+                            },
+                        ],
+                    ],
+                    plugins: [
+                        'transform-export-extensions',
+                        'transform-object-rest-spread',
+                        'transform-class-properties',
+                        'transform-flow-strip-types',
+                    ],
+                },
             },
         ],
     },
