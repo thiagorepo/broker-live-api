@@ -12,15 +12,16 @@ module.exports = {
         }),
     ],
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.js$/,
-                loader: 'babel-loader',
+                enforce: 'pre',
+                loader: 'eslint-loader',
                 include: path.join(__dirname, 'src'),
             },
             {
                 test: /\.js$/,
-                loader: 'eslint-loader',
+                loader: 'babel-loader',
                 include: path.join(__dirname, 'src'),
             },
         ],
