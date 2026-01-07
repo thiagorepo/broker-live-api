@@ -2,9 +2,8 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-    mode: 'production',
     devtool: 'source-map',
-    entry: ['./src/index.js'],
+    entry  : ['./src/index.js'],
     plugins: [
         new webpack.DefinePlugin({
             'process.env': {
@@ -15,8 +14,8 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.js$/,
-                loader: 'babel-loader',
+                test   : /\.js$/,
+                loader : 'babel-loader',
                 include: path.join(__dirname, 'src'),
                 options: {
                     babelrc: false,
@@ -49,9 +48,9 @@ module.exports = {
         ],
     },
     output: {
-        library: 'binary-live-api',
+        library      : 'binary-live-api',
         libraryTarget: 'umd',
-        path: path.resolve(__dirname, 'lib'),
-        filename: 'binary-live-api.js',
+        path         : path.resolve(__dirname, 'lib'),
+        filename     : 'binary-live-api.js',
     },
 };
