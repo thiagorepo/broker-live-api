@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
+    mode: 'production',
     devtool: 'source-map',
     entry: ['./src/index.js'],
     plugins: [
@@ -13,12 +14,6 @@ module.exports = {
     ],
     module: {
         rules: [
-            {
-                test: /\.js$/,
-                enforce: 'pre',
-                loader: 'eslint-loader',
-                include: path.join(__dirname, 'src'),
-            },
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
