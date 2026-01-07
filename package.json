@@ -41,6 +41,7 @@
     "test:flow": "flow check --all --show-all-errors",
     "test:full": "npm run test:eslint && npm run test:coveralls",
     "build": "webpack",
+    "postinstall": "npm run build",
     "lint": "eslint src",
     "prepublish": "webpack",
     "precommit": "lint-staged"
@@ -99,5 +100,5 @@
     "acorn": "5.7.4",
     "lodash.template": "4.5.0",
     "minimist": "0.2.1"
-  }
+  },
 }
