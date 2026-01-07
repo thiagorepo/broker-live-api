@@ -33,7 +33,7 @@
     "test:flow": "flow check --all --show-all-errors",
     "test:full": "npm run test:eslint && npm run test:coveralls",
     "build": "webpack",
-    "postinstall": "npm install --production=false && npm run build",
+    "postinstall": "npm run build",
     "lint": "eslint src",
     "prepublish": "webpack",
     "precommit": "lint-staged"
