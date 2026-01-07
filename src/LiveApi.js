@@ -234,20 +234,41 @@ export default class LiveApi {
           return false;
       }
 
-      Object.keys(this.resubscriptions).forEach(k => {
-          const stream = this.resubscriptions[k];
-          const type = Object.keys(stream).find(t => t === msgType);
-
-          if (type && !this.queuedResubscriptions.has(type)) {
-              this.queuedResubscriptions.add(type);
+      // For WrongResponse errors, drop the connection and reconnect
+      // This ensures a fresh websocket connection before retrying
+      if (error.code === 'WrongResponse') {
+          if (!this.queuedResubscriptions.has('reconnect')) {
+              this.queuedResubscriptions.add('reconnect');
+              this.socket.onclose = nullFunc;
+              try {
+                  this.socket.close();
+              } catch (e) {
+                  // ignore the error
+              }
+              // Reconnect - onOpen will call resubscribe() which retries all subscriptions
               setTimeout(() => {
-                  this.queuedResubscriptions.delete(type);
-                  stream[type]();
+                  this.queuedResubscriptions.delete('reconnect');
+                  this.connect();
               }, 500);
+              return true;
           }
-      });
 
-      return true;
+          // For other errors, use the existing retry mechanism
+          Object.keys(this.resubscriptions).forEach(k => {
+              const stream = this.resubscriptions[k];
+              const type = Object.keys(stream).find(t => t === msgType);
+
+              if (type && !this.queuedResubscriptions.has(type)) {
+                  this.queuedResubscriptions.add(type);
+                  setTimeout(() => {
+                      this.queuedResubscriptions.delete(type);
+                      stream[type]();
+                  }, 500);
+              }
+          });
+
+          return true;
+      }
   };
   changeLanguage = (ln: string): void => {
       if (ln === this.language) {
