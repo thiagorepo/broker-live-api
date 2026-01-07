@@ -152,6 +152,14 @@ export default class LiveApi {
     getInState = name => this.apiState.getState()[name];
     resubscriptions = {
         authorized: {
+            authorize: (): void => {
+                const token = this.getInState('token');
+                console.log('authorize', token);
+
+                if (token) {
+                    this.authorize(token);
+                }
+            },
             balance: (): void => {
                 if (this.getInState('balance')) {
                     this.subscribeToBalance();
@@ -179,6 +187,14 @@ export default class LiveApi {
             },
             ohlc: (): void => {
                 this.getInState('candlesHistory').forEach((param, symbol) => this.getTickHistory(symbol, param));
+            },
+            history: (): void => {
+                // Handle ticks_history responses with msg_type 'history'
+                this.getInState('ticksHistory').forEach((param, symbol) => this.getTickHistory(symbol, param));
+            },
+            candles: (): void => {
+            // Handle candles responses with msg_type 'candles'
+            this.getInState('candlesHistory').forEach((param, symbol) => this.getTickHistory(symbol, param));
             },
             proposal: (): void => {
                 this.getInState('proposals').forEach(proposal => this.subscribeToPriceForContractProposal(proposal));
