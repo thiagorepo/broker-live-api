@@ -218,7 +218,7 @@ export default class LiveApi {
   };
 
   queuedResubscriptions = new Set();
-  shouldResubscribeOnError = (json: Object): void => {
+  shouldResubscribeOnError = (json: Object): boolean => {
       const { msg_type: msgType, error } = json;
 
       const shouldResubscribe = [
@@ -250,25 +250,25 @@ export default class LiveApi {
                   this.queuedResubscriptions.delete('reconnect');
                   this.connect();
               }, 500);
-              return true;
           }
-
-          // For other errors, use the existing retry mechanism
-          Object.keys(this.resubscriptions).forEach(k => {
-              const stream = this.resubscriptions[k];
-              const type = Object.keys(stream).find(t => t === msgType);
-
-              if (type && !this.queuedResubscriptions.has(type)) {
-                  this.queuedResubscriptions.add(type);
-                  setTimeout(() => {
-                      this.queuedResubscriptions.delete(type);
-                      stream[type]();
-                  }, 500);
-              }
-          });
-
           return true;
       }
+
+      // For other errors, use the existing retry mechanism
+      Object.keys(this.resubscriptions).forEach(k => {
+          const stream = this.resubscriptions[k];
+          const type = Object.keys(stream).find(t => t === msgType);
+
+          if (type && !this.queuedResubscriptions.has(type)) {
+              this.queuedResubscriptions.add(type);
+              setTimeout(() => {
+                  this.queuedResubscriptions.delete(type);
+                  stream[type]();
+              }, 500);
+          }
+      });
+
+      return true;
   };
   changeLanguage = (ln: string): void => {
       if (ln === this.language) {
@@ -316,6 +316,15 @@ export default class LiveApi {
 
       delete this.unresolvedPromises[reqId];
       if (!json.error) {
+          return promise.resolve(json);
+      }
+
+      // Check if we should resubscribe/reconnect before rejecting
+      // If resubscription is handled, resolve the promise instead of rejecting
+      // The reconnection will retry the operation automatically
+      if (json.error && this.shouldResubscribeOnError(json)) {
+      // Resolve the promise since reconnection will retry
+      // This prevents unhandled promise rejections
           return promise.resolve(json);
       }
 
