@@ -1,6 +1,6 @@
 type LivEventHandler = (msgData: any) => void;
 
-export class ImprovedLiveEvents {
+export class LiveEvents {
   messageHandlers: Record<string, LivEventHandler[]>;
 
   constructor() {
