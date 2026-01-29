@@ -1,6 +1,6 @@
 import { Observable } from 'rx-lite';
 import { getUniqueId } from 'binary-utils';
-import LiveEvents from './LiveEvents';
+import { LiveEvents } from './LiveEvents';
 import ServerError from './ServerError';
 import * as calls from './calls';
 import ApiState from './ApiState';
